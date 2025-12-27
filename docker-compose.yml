@@ -21,3 +21,14 @@ services:
 
     volumes:
       - "./docker/postgres:/var/lib/postgresql/data"
+
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,sns
+      - DEBUG=1
+    volumes:
+      - "./docker/localstack:/var/lib/localstack"
