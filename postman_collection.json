@@ -59,11 +59,20 @@
             ]
         },
         {
-            "name": "AWS Verification (Localstack)",
+            "name": "AWS Verification (Localstack/DynamoDB Local)",
             "item": [
                 {
                     "name": "List S3 Bucket Contents",
                     "request": {
+                        "auth": {
+                            "type": "awssignature",
+                            "awssignature": {
+                                "accessKey": "fakeMyKeyId",
+                                "secretKey": "fakeSecretAccessKey",
+                                "region": "us-east-1",
+                                "service": "s3"
+                            }
+                        },
                         "method": "GET",
                         "header": [],
                         "url": {
@@ -89,6 +98,15 @@
                 {
                     "name": "List SNS Topics",
                     "request": {
+                        "auth": {
+                            "type": "awssignature",
+                            "awssignature": {
+                                "accessKey": "fakeMyKeyId",
+                                "secretKey": "fakeSecretAccessKey",
+                                "region": "us-east-1",
+                                "service": "sns"
+                            }
+                        },
                         "method": "POST",
                         "header": [
                             {
@@ -129,6 +147,15 @@
                 {
                     "name": "List DynamoDB Tables",
                     "request": {
+                        "auth": {
+                            "type": "awssignature",
+                            "awssignature": {
+                                "accessKey": "fakeMyKeyId",
+                                "secretKey": "fakeSecretAccessKey",
+                                "region": "us-east-1",
+                                "service": "dynamodb"
+                            }
+                        },
                         "method": "POST",
                         "header": [
                             {
@@ -157,7 +184,7 @@
                                 ""
                             ]
                         },
-                        "description": "Directly query DynamoDB Local to verify table creation."
+                        "description": "Directly query DynamoDB Local to verify table creation. Using AWS Signature with dummy credentials to satisfy local emulator."
                     }
                 }
             ]
