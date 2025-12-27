@@ -9,3 +9,4 @@ target/
 docker/dynamodb/
 docker/postgres/
 application.properties
+MEDIUM_BLOG.md
