@@ -51,8 +51,10 @@ public class OrderProjector {
                     .build(), RequestBody.fromString(content));
             System.out.println(" -> [S3] Receipt uploaded for " + order.getOrderId());
         } catch (Exception e) {
-            System.out.println(" -> [S3] Receipt upload failed (Localstack might be busy).");
+            System.out.println(" -> [S3] Receipt upload failed: " + e.getMessage());
+            e.printStackTrace();
         }
+
     }
 
     private void sendPaymentNotification(OrderRecord order) {
