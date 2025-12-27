@@ -44,6 +44,7 @@ public class DynamoDbConfig {
         return S3Client.builder()
                 .region(Region.US_EAST_1)
                 .endpointOverride(LOCALSTACK_URI)
+                .forcePathStyle(true)
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create("fakeMyKeyId", "fakeSecretAccessKey")))
                 .build();
