@@ -7,73 +7,160 @@
     },
     "item": [
         {
-            "name": "Create Order (Command)",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json",
-                        "type": "text"
+            "name": "Application APIs",
+            "item": [
+                {
+                    "name": "Create Order (Command)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"userId\": \"shivam_test_user\",\n    \"amount\": 149.99\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/orders",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "orders"
+                            ]
+                        },
+                        "description": "Submits a new order. This writes to PostgreSQL (Source of Truth) and projects data to DynamoDB, S3, and SNS."
                     }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n    \"userId\": \"shivam_test_user\",\n    \"amount\": 149.99\n}"
                 },
-                "url": {
-                    "raw": "{{baseUrl}}/api/orders",
-                    "host": [
-                        "{{baseUrl}}"
-                    ],
-                    "path": [
-                        "api",
-                        "orders"
-                    ]
-                },
-                "description": "Submits a new order. This writes to PostgreSQL (Source of Truth) and projects data to DynamoDB, S3, and SNS."
-            },
-            "response": []
+                {
+                    "name": "Get User Orders (Query)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/orders/shivam_test_user",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "orders",
+                                "shivam_test_user"
+                            ]
+                        },
+                        "description": "Retrieves orders for a specific user. This query hits the DynamoDB Read Model for high-speed retrieval."
+                    }
+                }
+            ]
         },
         {
-            "name": "Get User Orders (Query)",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                    "raw": "{{baseUrl}}/api/orders/shivam_test_user",
-                    "host": [
-                        "{{baseUrl}}"
-                    ],
-                    "path": [
-                        "api",
-                        "orders",
-                        "shivam_test_user"
-                    ]
+            "name": "AWS Verification (Localstack)",
+            "item": [
+                {
+                    "name": "List S3 Bucket Contents",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:4566/order-receipts?list-type=2",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "4566",
+                            "path": [
+                                "order-receipts"
+                            ],
+                            "query": [
+                                {
+                                    "key": "list-type",
+                                    "value": "2"
+                                }
+                            ]
+                        },
+                        "description": "Directly query Localstack to see the receipts stored in the S3 bucket."
+                    }
                 },
-                "description": "Retrieves orders for a specific user. This query hits the DynamoDB Read Model for high-speed retrieval."
-            },
-            "response": []
-        }
-    ],
-    "event": [
-        {
-            "listen": "prerequest",
-            "script": {
-                "type": "text/javascript",
-                "exec": [
-                    ""
-                ]
-            }
-        },
-        {
-            "listen": "test",
-            "script": {
-                "type": "text/javascript",
-                "exec": [
-                    ""
-                ]
-            }
+                {
+                    "name": "List SNS Topics",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "Action",
+                                    "value": "ListTopics",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "Version",
+                                    "value": "2010-03-31",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "http://localhost:4566/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "4566",
+                            "path": [
+                                ""
+                            ]
+                        },
+                        "description": "Directly query Localstack SNS to verify the topic exists."
+                    }
+                },
+                {
+                    "name": "List DynamoDB Tables",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-Amz-Target",
+                                "value": "DynamoDB_20120810.ListTables",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-amz-json-1.0",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                ""
+                            ]
+                        },
+                        "description": "Directly query DynamoDB Local to verify table creation."
+                    }
+                }
+            ]
         }
     ],
     "variable": [
