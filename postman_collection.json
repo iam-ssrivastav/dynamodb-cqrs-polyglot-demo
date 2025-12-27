@@ -2,8 +2,17 @@
     "info": {
         "_postman_id": "a4d3b5e1-8a7c-4d2f-9b6e-c1d0a5b4f3e2",
         "name": "Polyglot CQRS API Collection",
-        "description": "Postman collection for testing the Polyglot CQRS Order Service (PostgreSQL, DynamoDB, S3, SNS).",
+        "description": "Postman collection for testing the Polyglot CQRS Order Service. All AWS requests include dummy signatures for local testing.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "awssignature",
+        "awssignature": {
+            "accessKey": "fakeMyKeyId",
+            "secretKey": "fakeSecretAccessKey",
+            "region": "us-east-1",
+            "service": "dynamodb"
+        }
     },
     "item": [
         {
@@ -12,6 +21,9 @@
                 {
                     "name": "Create Order (Command)",
                     "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
                         "method": "POST",
                         "header": [
                             {
@@ -33,13 +45,15 @@
                                 "api",
                                 "orders"
                             ]
-                        },
-                        "description": "Submits a new order. This writes to PostgreSQL (Source of Truth) and projects data to DynamoDB, S3, and SNS."
+                        }
                     }
                 },
                 {
                     "name": "Get User Orders (Query)",
                     "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
                         "method": "GET",
                         "header": [],
                         "url": {
@@ -52,14 +66,13 @@
                                 "orders",
                                 "shivam_test_user"
                             ]
-                        },
-                        "description": "Retrieves orders for a specific user. This query hits the DynamoDB Read Model for high-speed retrieval."
+                        }
                     }
                 }
             ]
         },
         {
-            "name": "AWS Verification (Localstack/DynamoDB Local)",
+            "name": "AWS Verification",
             "item": [
                 {
                     "name": "List S3 Bucket Contents",
@@ -91,8 +104,7 @@
                                     "value": "2"
                                 }
                             ]
-                        },
-                        "description": "Directly query Localstack to see the receipts stored in the S3 bucket."
+                        }
                     }
                 },
                 {
@@ -140,8 +152,7 @@
                             "path": [
                                 ""
                             ]
-                        },
-                        "description": "Directly query Localstack SNS to verify the topic exists."
+                        }
                     }
                 },
                 {
@@ -183,8 +194,7 @@
                             "path": [
                                 ""
                             ]
-                        },
-                        "description": "Directly query DynamoDB Local to verify table creation. Using AWS Signature with dummy credentials to satisfy local emulator."
+                        }
                     }
                 }
             ]
