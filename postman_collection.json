@@ -1,18 +1,9 @@
 {
     "info": {
         "_postman_id": "a4d3b5e1-8a7c-4d2f-9b6e-c1d0a5b4f3e2",
-        "name": "Polyglot CQRS API Collection",
-        "description": "Postman collection for testing the Polyglot CQRS Order Service. All AWS requests include dummy signatures for local testing.",
+        "name": "Polyglot CQRS API Collection (Foolproof)",
+        "description": "Postman collection for testing the Polyglot CQRS Order Service. AWS verification requests use static dummy auth to avoid Postman Signature errors.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "auth": {
-        "type": "awssignature",
-        "awssignature": {
-            "accessKey": "fakeMyKeyId",
-            "secretKey": "fakeSecretAccessKey",
-            "region": "us-east-1",
-            "service": "dynamodb"
-        }
     },
     "item": [
         {
@@ -21,9 +12,6 @@
                 {
                     "name": "Create Order (Command)",
                     "request": {
-                        "auth": {
-                            "type": "noauth"
-                        },
                         "method": "POST",
                         "header": [
                             {
@@ -51,9 +39,6 @@
                 {
                     "name": "Get User Orders (Query)",
                     "request": {
-                        "auth": {
-                            "type": "noauth"
-                        },
                         "method": "GET",
                         "header": [],
                         "url": {
@@ -72,22 +57,24 @@
             ]
         },
         {
-            "name": "AWS Verification",
+            "name": "AWS Verification (Foolproof Static Headers)",
             "item": [
                 {
                     "name": "List S3 Bucket Contents",
                     "request": {
-                        "auth": {
-                            "type": "awssignature",
-                            "awssignature": {
-                                "accessKey": "fakeMyKeyId",
-                                "secretKey": "fakeSecretAccessKey",
-                                "region": "us-east-1",
-                                "service": "s3"
-                            }
-                        },
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "AWS4-HMAC-SHA256 Credential=fake/20251227/us-east-1/s3/aws4_request, SignedHeaders=host;x-amz-date, Signature=fake",
+                                "type": "text"
+                            },
+                            {
+                                "key": "x-amz-date",
+                                "value": "20251227T000000Z",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "http://localhost:4566/order-receipts?list-type=2",
                             "protocol": "http",
@@ -104,26 +91,28 @@
                                     "value": "2"
                                 }
                             ]
-                        }
+                        },
+                        "description": "Using static headers to bypass manual auth setup."
                     }
                 },
                 {
                     "name": "List SNS Topics",
                     "request": {
-                        "auth": {
-                            "type": "awssignature",
-                            "awssignature": {
-                                "accessKey": "fakeMyKeyId",
-                                "secretKey": "fakeSecretAccessKey",
-                                "region": "us-east-1",
-                                "service": "sns"
-                            }
-                        },
                         "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",
                                 "value": "application/x-www-form-urlencoded",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "AWS4-HMAC-SHA256 Credential=fake/20251227/us-east-1/sns/aws4_request, SignedHeaders=content-type;host;x-amz-date, Signature=fake",
+                                "type": "text"
+                            },
+                            {
+                                "key": "x-amz-date",
+                                "value": "20251227T000000Z",
                                 "type": "text"
                             }
                         ],
@@ -158,15 +147,6 @@
                 {
                     "name": "List DynamoDB Tables",
                     "request": {
-                        "auth": {
-                            "type": "awssignature",
-                            "awssignature": {
-                                "accessKey": "fakeMyKeyId",
-                                "secretKey": "fakeSecretAccessKey",
-                                "region": "us-east-1",
-                                "service": "dynamodb"
-                            }
-                        },
                         "method": "POST",
                         "header": [
                             {
@@ -177,6 +157,16 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/x-amz-json-1.0",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "AWS4-HMAC-SHA256 Credential=fake/20251227/us-east-1/dynamodb/aws4_request, SignedHeaders=content-type;host;x-amz-target;x-amz-date, Signature=fake",
+                                "type": "text"
+                            },
+                            {
+                                "key": "x-amz-date",
+                                "value": "20251227T000000Z",
                                 "type": "text"
                             }
                         ],
@@ -194,7 +184,8 @@
                             "path": [
                                 ""
                             ]
-                        }
+                        },
+                        "description": "Static headers injected to bypass Postman's AWS Signature helper issues."
                     }
                 }
             ]
